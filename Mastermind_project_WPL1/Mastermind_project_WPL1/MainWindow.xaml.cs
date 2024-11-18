@@ -166,7 +166,7 @@ namespace Mastermind_project_WPL1
         // Methode om de window title te updaten
         private void updateWindowTitle()
         {
-            this.Title = $"Poging {attempts}";
+            this.Title = $"Poging {attempts} - Tijd: {remainingTime} seconden";
         }
 
         // Timer Tick-event
@@ -176,9 +176,7 @@ namespace Mastermind_project_WPL1
 
             if (remainingTime <= 0)
             {
-                timer.Stop();
-                MessageBox.Show("De tijd is om! Probeer opnieuw.", "Tijd voorbij", MessageBoxButton.OK, MessageBoxImage.Warning);
-                startCountdown();
+                stopCountdown();
             }
 
             updateWindowTitle();
@@ -189,6 +187,17 @@ namespace Mastermind_project_WPL1
         {
             remainingTime = 10;
             timer.Start();
+        }
+
+        // Stop de timer en verlies de beurt
+        private void stopCountdown()
+        {
+            timer.Stop();
+            MessageBox.Show("Tijd voorbij! Je hebt je beurt verloren.", "Beurt Verloren", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+            // Verhoog het aantal pogingen
+            attempts++;
+            updateWindowTitle();
         }
     }
 }
