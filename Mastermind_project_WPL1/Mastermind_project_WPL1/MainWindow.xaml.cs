@@ -62,13 +62,17 @@ namespace Mastermind_project_WPL1
         // Sneltoets-event voor debug-modus
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F1 && Keyboard.Modifiers == ModifierKeys.Control)
+            if (e.Key == Key.F12 && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 toggleDebugMode();
             }
         }
 
-        // Methode om de debug-modus aan of uit te zetten
+        /// <summary>
+        /// Schakelt de debug-modus in of uit.
+        /// In debug-modus wordt de gegenereerde kleurencode zichtbaar in de debugTextBox.
+        /// Activering gebeurt via de sneltoets CTRL + F12.
+        /// </summary>
         private void toggleDebugMode()
         {
             debugMode = !debugMode;
@@ -182,14 +186,22 @@ namespace Mastermind_project_WPL1
             updateWindowTitle();
         }
 
-        // Start de timer en reset de countdown
+        /// <summary>
+        /// Start de countdown-timer van 10 seconden.
+        /// Wordt aangeroepen telkens wanneer een nieuwe poging begint of wanneer een nieuwe code wordt gegenereerd.
+        /// Reset de resterende tijd en activeert de timer om het Tick-event te verwerken.
+        /// </summary>
         private void startCountdown()
         {
             remainingTime = 10;
             timer.Start();
         }
 
-        // Stop de timer en verlies de beurt
+        /// <summary>
+        /// Stopt de countdown-timer wanneer de tijd op is.
+        /// Wordt automatisch aangeroepen door het Tick-event van de timer.
+        /// Informeert de speler dat de beurt verloren is en verhoogt het aantal pogingen.
+        /// </summary>
         private void stopCountdown()
         {
             timer.Stop();
