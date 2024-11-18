@@ -19,11 +19,14 @@ namespace Mastermind_project_WPL1
     {
         private int attempts = 1;
         private string targetColorCode;
+        private bool debugMode = false;
+
         public MainWindow()
         {
             InitializeComponent();
 
             targetColorCode = generateRandomColorCode();
+            debugTextBox.Text = targetColorCode;
             updateWindowTitle();
 
             // Vul de comboBoxen met kleuren
@@ -38,6 +41,25 @@ namespace Mastermind_project_WPL1
             comboBox2.SelectionChanged += (s, e) => updateLabel(label2, comboBox2.SelectedItem.ToString());
             comboBox3.SelectionChanged += (s, e) => updateLabel(label3, comboBox3.SelectedItem.ToString());
             comboBox4.SelectionChanged += (s, e) => updateLabel(label4, comboBox4.SelectedItem.ToString());
+
+            // Sneltoets voor debug-modus
+            this.KeyDown += MainWindow_KeyDown;
+        }
+
+        // Sneltoets-event voor debug-modus
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F1 && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                toggleDebugMode();
+            }
+        }
+
+        // Methode om de debug-modus aan of uit te zetten
+        private void toggleDebugMode()
+        {
+            debugMode = !debugMode;
+            debugTextBox.Visibility = debugMode ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // Methode om random kleurencode te genereren
@@ -125,6 +147,7 @@ namespace Mastermind_project_WPL1
             }
         }
 
+        // Methode om de window title te updaten
         private void updateWindowTitle()
         {
             this.Title = $"Poging {attempts}";
