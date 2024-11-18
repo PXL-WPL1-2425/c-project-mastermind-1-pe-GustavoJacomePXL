@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Mastermind_project_WPL1
 {
@@ -20,10 +21,19 @@ namespace Mastermind_project_WPL1
         private int attempts = 1;
         private string targetColorCode;
         private bool debugMode = false;
+        private DispatcherTimer timer;
+        private int remainingTime = 10;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Initialiseer de timer
+            timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            timer.Tick += Timer_Tick;
 
             targetColorCode = generateRandomColorCode();
             debugTextBox.Text = targetColorCode;
@@ -44,6 +54,9 @@ namespace Mastermind_project_WPL1
 
             // Sneltoets voor debug-modus
             this.KeyDown += MainWindow_KeyDown;
+
+            // Start de timer bij de eerste codegeneratie
+            startCountdown();
         }
 
         // Sneltoets-event voor debug-modus
@@ -98,6 +111,9 @@ namespace Mastermind_project_WPL1
 
         private void checkButton_Click(object sender, RoutedEventArgs e)
         {
+            // Start de timer opnieuw bij een poging
+            startCountdown();
+
             // Haal de geselecteerde kleuren op uit de comboBoxen
             string[] selectedColors = {
                 comboBox1.SelectedItem?.ToString(),
@@ -151,6 +167,28 @@ namespace Mastermind_project_WPL1
         private void updateWindowTitle()
         {
             this.Title = $"Poging {attempts}";
+        }
+
+        // Timer Tick-event
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            remainingTime--;
+
+            if (remainingTime <= 0)
+            {
+                timer.Stop();
+                MessageBox.Show("De tijd is om! Probeer opnieuw.", "Tijd voorbij", MessageBoxButton.OK, MessageBoxImage.Warning);
+                startCountdown();
+            }
+
+            updateWindowTitle();
+        }
+
+        // Start de timer en reset de countdown
+        private void startCountdown()
+        {
+            remainingTime = 10;
+            timer.Start();
         }
     }
 }
